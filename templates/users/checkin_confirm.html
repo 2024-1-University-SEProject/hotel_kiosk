@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.confirm }}{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="title">{{ translations.confirm }}</h1>
+    {% include 'users/_lang_select.html' %}
+    <p>예약 번호: {{ guest.reservation_number }}</p>
+    <div class="guest-info">
+        <p>{{ translations.name }}: {{ guest.name }}</p>
+        <p>{{ translations.select_room }}: {{ guest.room }}</p>
+        <p>{{ translations.breakfast }}: {{ guest.breakfast }}</p>
+        <p>{{ translations.payment_method }}: {{ guest.payment }}</p>
+        <p>{{ translations.total_price }}: {{ guest.price }} KRW</p>
+    </div>
+    <form method="POST" action="{{ url_for('checkin_confirm', lang=current_lang) }}">
+        <button type="submit" class="kiosk-button">{{ translations.pay }}</button>
+    </form>
+    <!-- <a href="{{ url_for('checkin', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a> -->
+</div>
+{% endblock %}

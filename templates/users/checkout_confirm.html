@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.checkout_confirm }}{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="title">{{ translations.checkout_confirm }}</h1>
+    {% include 'users/_lang_select.html' %}
+    <p>{{ translations.reservation_number }}: {{ guest.reservation_number }}</p>
+    <div class="guest-info">
+        <p>{{ translations.name }}: {{ guest.name }}</p>
+        <p>{{ translations.select_room }}: {{ guest.room }}</p>
+    </div>
+    <form method="POST" action="{{ url_for('checkout_confirm', lang=current_lang) }}">
+        <button type="submit" class="kiosk-button">{{ translations.confirm }}</button>
+    </form>
+    <a href="{{ url_for('checkout', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+</div>
+{% endblock %}

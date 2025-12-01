@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Receipt Details{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 로그인</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">{{ translations.admin_login }}</h1>
+        <form method="POST" action="{{ url_for('admin_login', lang=current_lang) }}">
+            <div class="form-group">
+                <label for="username">{{ translations.admin_id }}:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">{{ translations.admin_password }}:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="kiosk-button">{{ translations.admin_login_confirm }}</button>
+        </form>
+        <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}

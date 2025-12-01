@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.checkout_confirm }}{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>price_setting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">{{ translations.price_setting }}</h1>
+        <form method="POST">
+            <div class="form-group">
+                <label for="room_number">{{ translations.room_number }}</label>
+                <select id="room_number" name="room_number" required>
+                    <option value="">{{ translations.select_room }}</option>
+                    {% for room, price in room_prices.items() %}
+                    <option value="{{ room }}">{{ room }} ({{ price }} KRW)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="price">{{ translations.price }}</label>
+                <input type="number" id="price" name="price" required>
+            </div>
+            <button type="submit" class="kiosk-button">{{ translations.confirm }}</button>
+        </form>
+        <a href="{{ url_for('adjust_price', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}

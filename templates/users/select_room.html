@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.confirm }}{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>키오스크</title>
+</head>
+<body>
+    <header>사용자 키오스크</header> 
+    <div class="panel-container">
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 1 Image">
+            <p>201호 싱글 {{room_prices['201']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='201'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 2 Image">
+            <p>202호 싱글 {{room_prices['202']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='202'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 3 Image">
+            <p>203호 싱글 {{room_prices['203']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='203'>
+                <button type="submit">선택</button>
+            </form>
+            <br/>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 4 Image">
+            <p>204호 싱글 {{room_prices['204']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='204'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 5 Image">
+            <p>205호 싱글 {{room_prices['205']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='205'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 6 Image">
+            <p>206호 싱글 {{room_prices['206']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='206'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 7 Image">
+            <p>207호 싱글 {{room_prices['207']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='207'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 8 Image">
+            <p>208호 싱글 {{room_prices['208']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='208'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 9 Image">
+            <p>209호 싱글 {{room_prices['209']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='209'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel1.jpg" alt="Panel 10 Image">
+            <p>210호 싱글 {{room_prices['210']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='210'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel2.jpg" alt="Panel 11 Image">
+            <p>301호 더블 {{room_prices['301']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='301'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel2.jpg" alt="Panel 12 Image" >
+            <p>302호 더블 {{room_prices['302']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='302'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel2.jpg" alt="Panel 13 Image">
+            <p>303호 더블 {{room_prices['303']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='303'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel2.jpg" alt="Panel 14 Image">
+            <p>304호 더블 {{room_prices['304']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='304'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel2.jpg" alt="Panel 15 Image">
+            <p>305호 더블 {{room_prices['305']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='305'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel2.jpg" alt="Panel 16 Image">
+            <p>306호 더블 {{room_prices['306']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='306'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel2.jpg" alt="Panel 17 Image">
+            <p>307호 더블 {{room_prices['307']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='307'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <img src="static/img/hotel3.jpg" alt="Panel 18 Image">
+            <p>401호 트윈 {{room_prices['401']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='401'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel3.jpg" alt="Panel 19 Image">
+            <p>402호 트윈 {{room_prices['402']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='402'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel3.jpg" alt="Panel 20 Image">
+            <p>403호 트윈 {{room_prices['403']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='403'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel3.jpg" alt="Panel 21 Image">
+            <p>404호 트윈 {{room_prices['404']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='404'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        
+        <div class="panel">
+            <img src="static/img/hotel4.jpg" alt="Panel 22 Image">
+            <p>501호 스위트 {{room_prices['501']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='501'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+        <div class="panel">
+            <img src="static/img/hotel4.jpg" alt="Panel 23 Image">
+            <p>502호 스위트 {{room_prices['502']}} KRW</p>
+            <form method="post">
+                <input type="hidden" name="room" value='502'>
+                <button type="submit">선택</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    <button style="display: none" onclick="getTestService()">테스트 버튼</button>
+    <button style="display: none" id='test'>테스트</button>
+</body>
+<script>
+    async function selectRoom(roomNum) {
+        try {
+            let response = await fetch('/check_room_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ room_num: roomNum })
+            });
+            
+            let result = await response.json();
+
+            if (result.status === 'available') {
+                window.location.href = '/checkin';
+            } else {
+                alert('해당 객실은 체크인 되어 있거나, 더럽습니다. 다시 선택해주세요.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function getTestService() {
+        let data = new FormData();
+        data.append("name", "kiosk_test");
+        try {
+            let response = await fetch('/test', {
+                method: 'POST',
+                body: data
+            });
+
+            let result = await response.json();
+            document.querySelector('#test').innerHTML = result.data.output;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+</script>
+</html>
+{% endblock %}

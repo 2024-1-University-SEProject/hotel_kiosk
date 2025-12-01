@@ -1,0 +1,5 @@
+<div class="language-select">
+    {% for code, name in languages.items() %}
+        <a href="?lang={{ code }}" class="{% if code == current_lang %}selected{% endif %}">{{ name }}</a>
+    {% endfor %}
+</div>

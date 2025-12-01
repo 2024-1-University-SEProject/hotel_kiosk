@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.checkout_confirm }}{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ translations['weekend_price_setting'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">{{ translations['weekend_price_setting'] }}</h1>
+        <form action="{{ url_for('adjust_weekend_price', lang=current_lang) }}" method="post">
+            <label for="adjustment">{{ translations['price'] }}</label>
+            <input type="number" id="adjustment" name="adjustment" required>
+            <br/>
+            <button type="submit" class="kiosk-button">{{ translations['confirm'] }}</button>
+        </form>
+        <a href="{{ url_for('adjust_price', lang=current_lang) }}" class="kiosk-button">{{ translations['back'] }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}

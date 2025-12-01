@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.confirm }}{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ translations.call_staff_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">{{ translations.call_staff_title }}</h1>
+        {% include 'users/_lang_select.html' %}
+        <form method="POST" action="{{ url_for('call_staff', lang=current_lang) }}">
+            <div class="form-group">
+                <label for="reason">{{ translations.call_reason }}:</label>
+                <select id="reason" name="reason" required>
+                    <option value="">{{ translations.call_reason }}</option>
+                    <option value="kiosk_usage">{{ translations.kiosk_usage }}</option>
+                    <option value="room_change">{{ translations.room_change }}</option>
+                    <option value="breakfast_is_good">{{ translations.breakfast_is_good }}</option>
+                    <option value="breakfast_is_bad">{{ translations.breakfast_is_bad }}</option>
+                    <option value="service_is_good">{{ translations.service_is_good }}</option>
+                    <option value="service_is_bad">{{ translations.service_is_bad }}</option>
+                    <option value="room_is_good">{{ translations.room_is_good }}</option>
+                    <option value="room_is_bad">{{ translations.room_is_bad }}</option>
+                </select>
+            </div>
+            <button type="submit" class="kiosk-button">{{ translations.confirm }}</button>
+        </form>
+        <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}

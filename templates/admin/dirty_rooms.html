@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.admin_dashboard }}{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ translations['admin_dashboard'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+
+        <h2>{{ translations.admin_dirty_list }}</h2>
+        <form method="POST" action="{{ url_for('clean_room', lang=current_lang) }}">
+            <div class="form-group">
+                <br/><br/>
+                <select id="room_number" name="room_number" required>
+                    <option value="">{{ translations.admin_dirty_select }}</option>
+                    {% for room, price in dirty_rooms.items() %}
+                    <option value="{{ room }}">{{ room }} ({{ price }} KRW)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="kiosk-button">{{ translations.admin_dirty_clear }}</button>
+        </form>
+        <a href="{{ url_for('admin_dashboard', lang=current_lang) }}" class="kiosk-button">{{ translations['back'] }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,28 @@
+<!-- templates/admin/restore_details.html -->
+{% extends "base.html" %}
+{% block title %}Receipt Details{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영수증 세부 정보</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">{{ translations.admin_receipt_info }}</h1>
+        <h2>{{ translations.reservation_number }}: {{ a_receipt.reservation_number }}</h2>
+        <h2>{{ translations.name }}: {{ a_receipt.name }}</h2>
+        <h2>{{ translations.room_number }}: {{ a_receipt.room }}</h2>
+        <h2>{{ translations.nowday }}: {{ a_receipt.date }}</h2>
+        <h2>{{ translations.phone }}: {{ a_receipt.phone }}</h2>
+        <h2>{{ translations.breakfast }}: {{ a_receipt.breakfast }}</h2>
+        <h2>{{ translations.payment_method }}: {{ a_receipt.payment }}</h2>
+        <h2>{{ translations.price }}: {{ a_receipt.price }}</h2>
+        <a href="{{ url_for('admin_restore', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}

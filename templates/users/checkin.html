@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ translations.confirm }}{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ translations.checkin }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script type="text/javascript">
+        const roomPrices = {{ room_prices | tojson }};
+        const roomPricesto = {{ room_pricesto }};
+        const breakfastPrice = {{ breakfast_price }};
+    </script>
+    
+</head>
+<body onload="updateTotalPrice()">
+    <div class="container">
+        <h1 class="title">{{ translations.checkin }}</h1>
+        {% include 'users/_lang_select.html' %}
+        <form method="POST" action="{{ url_for('checkin', lang=current_lang) }}" oninput="updateTotalPrice()">
+            <div class="form-group">
+                <label for="name">{{ translations.name }}:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">{{ translations.phone }}:</label>
+                <input type="text" id="phone" name="phone" required pattern="\d*">
+            </div>
+            <div class="form-group">
+                <label for="breakfast">{{ translations.breakfast }}:</label>
+                <select id="breakfast" name="breakfast">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes ({{ breakfast_price }} KRW)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="payment">{{ translations.payment_method }}:</label>
+                <select id="payment" name="payment" required>
+                    <option value="">{{ translations.payment_method }}</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Mobile Payment">Mobile Payment</option>
+                </select>
+            </div>
+            <button type="submit" class="kiosk-button">{{ translations.confirm }}</button>
+        </form>
+        <a href="{{ url_for('select_room', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 로그인</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ translations.call_staff }}</h1>
+        <h2>{{ translations.admin_feedback_list }}</h2>
+            {% for record in call_records %}
+            <li>{{ record.timestamp }} - {{ record.reason }}</li>
+            {% endfor %}
+    </div>
+    <a href="{{ url_for('admin_dashboard', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    </a>
+</body>
+</html>

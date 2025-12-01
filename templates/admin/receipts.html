@@ -1,0 +1,23 @@
+<!-- templates/admin/receipts.html -->
+{% extends "base.html" %}
+{% block title %}{{ translations.admin_receipts }}{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ translations.admin_receipts }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">{{ translations.admin_receipts }}</h1>
+        {% for reservation_number, guest in reservations.items() %}
+        <h2><a href="{{ url_for('receipt_details', lang=current_lang, reservation_number=reservation_number) }}">{{ reservations[reservation_number] }} - {{ translations.reservation_number }}: {{ reservation_number }}</a></h2>
+        {% endfor %}
+        <a href="{{ url_for('admin_dashboard', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+    </div>
+</body>
+</html>
+{% endblock %}
