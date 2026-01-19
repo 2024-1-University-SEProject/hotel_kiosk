@@ -1,53 +1,80 @@
 {% extends "base.html" %}
-{% block title %}{{ translations.confirm }}{% endblock %}
+{% block title %}{{ translations.checkin }}{% endblock %}
+
 {% block content %}
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ translations.checkin }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script type="text/javascript">
-        const roomPrices = {{ room_prices | tojson }};
-        const roomPricesto = {{ room_pricesto }};
-        const breakfastPrice = {{ breakfast_price }};
-    </script>
-    
-</head>
-<body onload="updateTotalPrice()">
-    <div class="container">
-        <h1 class="title">{{ translations.checkin }}</h1>
-        {% include 'users/_lang_select.html' %}
-        <form method="POST" action="{{ url_for('checkin', lang=current_lang) }}" oninput="updateTotalPrice()">
-            <div class="form-group">
-                <label for="name">{{ translations.name }}:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">{{ translations.phone }}:</label>
-                <input type="text" id="phone" name="phone" required pattern="\d*">
-            </div>
-            <div class="form-group">
-                <label for="breakfast">{{ translations.breakfast }}:</label>
-                <select id="breakfast" name="breakfast">
-                    <option value="No">No</option>
-                    <option value="Yes">Yes ({{ breakfast_price }} KRW)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="payment">{{ translations.payment_method }}:</label>
-                <select id="payment" name="payment" required>
-                    <option value="">{{ translations.payment_method }}</option>
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="Cash">Cash</option>
-                    <option value="Mobile Payment">Mobile Payment</option>
-                </select>
-            </div>
-            <button type="submit" class="kiosk-button">{{ translations.confirm }}</button>
-        </form>
-        <a href="{{ url_for('select_room', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
-    </div>
-</body>
-</html>
+<div id="kiosk-data" data-room-prices='{{ room_prices | tojson }}' data-selected-room='{{ room_priceses | tojson }}'
+    data-breakfast-price='{{ breakfast_price }}' style="display:none;"></div>
+<script type="text/javascript">
+    const dataElement = document.getElementById('kiosk-data');
+    const roomPrices = JSON.parse(dataElement.dataset.roomPrices);
+    const selectedRoom = JSON.parse(dataElement.dataset.selectedRoom);
+    const breakfastPrice = parseInt(dataElement.dataset.breakfastPrice);
+
+    function updateTotalPrice() {
+        const breakfastSelect = document.getElementById('breakfast');
+        const breakfastVal = breakfastSelect.value;
+        const priceDisplay = document.getElementById('total-price-display');
+
+        let total = roomPrices[selectedRoom] || 0;
+        if (breakfastVal === 'Yes') {
+            total += breakfastPrice;
+        }
+
+        if (priceDisplay) {
+            priceDisplay.textContent = total.toLocaleString() + ' KRW';
+        }
+    }
+</script>
+
+<div class="container">
+    <h1 class="title">{{ translations.checkin }}</h1>
+    {% include 'users/_lang_select.html' %}
+    <form method="POST" action="{{ url_for('checkin', lang=current_lang) }}" id="checkinForm">
+
+        <div class="form-group">
+            <label>{{ translations.room_number }}:</label>
+            <input type="text" value="{{ room_priceses }}" disabled class="room-display">
+        </div>
+
+        <div class="form-group">
+            <label for="name">{{ translations.name }}:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">{{ translations.phone }}:</label>
+            <input type="text" id="phone" name="phone" required pattern="\d*">
+        </div>
+        <div class="form-group">
+            <label for="breakfast">{{ translations.breakfast }}:</label>
+            <select id="breakfast" name="breakfast" onchange="updateTotalPrice()">
+                <option value="No">No</option>
+                <option value="Yes">Yes ({{ breakfast_price }} KRW)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="payment">{{ translations.payment_method }}:</label>
+            <select id="payment" name="payment" required>
+                <option value="">{{ translations.payment_method }}</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Cash">Cash</option>
+                <option value="Mobile Payment">Mobile Payment</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>{{ translations.total_price }}:</label>
+            <div id="total-price-display" style="font-weight: bold; font-size: 1.2rem; padding: 10px 0;">0 KRW</div>
+        </div>
+
+        <button type="submit" class="kiosk-button">{{ translations.confirm }}</button>
+    </form>
+    <a href="{{ url_for('select_room', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+</div>
+
+<script>
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', function () {
+        updateTotalPrice();
+    });
+</script>
 {% endblock %}

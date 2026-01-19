@@ -1,14 +1,16 @@
 {% extends "base.html" %}
-{% block title %}{{ translations.confirm }}{% endblock %}
+{% block title %}{{ translations.call_staff_title }}{% endblock %}
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ translations.call_staff_title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
+
 <body>
     <div class="container">
         <h1 class="title">{{ translations.call_staff_title }}</h1>
@@ -33,5 +35,6 @@
         <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
     </div>
 </body>
+
 </html>
 {% endblock %}
