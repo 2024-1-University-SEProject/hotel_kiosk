@@ -3,28 +3,33 @@
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ translations.hotel_title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
+
 <body>
     <div class="container">
         <h1 class="title">{{ translations.hotel_title }}</h1>
         {% include 'users/_lang_select.html' %}
         <div class="button-grid">
-            <a href="{{ url_for('select_room', lang=current_lang) }}" class="kiosk-button">{{ translations.checkin }}</a>
+            <a href="{{ url_for('select_room', lang=current_lang) }}" class="kiosk-button">{{ translations.checkin
+                }}</a>
             <a href="{{ url_for('checkout', lang=current_lang) }}" class="kiosk-button">{{ translations.checkout }}</a>
-            <br />
-            <a href="{{ url_for('facilities', lang=current_lang) }}" class="kiosk-button">{{ translations.facilities }}</a>
-            <a href="{{ url_for('call_staff', lang=current_lang) }}" class="kiosk-button">{{ translations.call_staff }}</a>
+            <a href="{{ url_for('facilities', lang=current_lang) }}" class="kiosk-button">{{ translations.facilities
+                }}</a>
+            <a href="{{ url_for('call_staff', lang=current_lang) }}" class="kiosk-button">{{ translations.call_staff
+                }}</a>
         </div>
         <div class="admin-login">
-            <br/><br/><br/><br/><br/><br/>
+            <br /><br /><br /><br /><br /><br />
             <a href="{{ url_for('admin_login', lang=current_lang) }}" class="kiosk-button">{{ translations.admin }}</a>
         </div>
     </div>
 </body>
+
 </html>
 {% endblock %}

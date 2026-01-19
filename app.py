@@ -76,7 +76,7 @@ def get_translations(lang):
             'hotel_facilities': '호텔 층별 시설',
             'nearby_facilities': '호텔 주변 시설',
             'facility_info': '시설 정보',
-            'built_by': '이 시설은 2024년 김진성에 의해 세워졌으며 앞으로 어떻게 될지 알 수 없습니다.',
+            'built_by': '이 시설은 2024년 호텔 관리자에 의해 세워졌으며 앞으로 어떻게 될지 알 수 없습니다.',
             'call_reason': '호출 이유',
             'total_price': '총 금액',
             'wifi_name': '이름',
@@ -159,7 +159,7 @@ def get_translations(lang):
             'hotel_facilities': 'Hotel Facilities by Floor',
             'nearby_facilities': 'Nearby Facilities',
             'facility_info': 'Facility Information',
-            'built_by': 'This facility was built in 2024 by Jinseong Kim and its future is uncertain.',
+            'built_by': 'This facility was built in 2024 by Hotel Management and its future is uncertain.',
             'call_reason': 'Call Reason',
             'total_price': 'Total Price',
             'wifi_name': 'Name',
@@ -242,7 +242,7 @@ def get_translations(lang):
             'hotel_facilities': '酒店设施',
             'nearby_facilities': '附近设施',
             'facility_info': '设施信息',
-            'built_by': '此设施由金晋诚于2024年建成，未来充满不确定性。',
+            'built_by': '此设施由酒店经理于2024年建成，未来充满不确定性。',
             'call_reason': '呼叫原因',
             'total_price': '总价格',
             'wifi_name': '名称',
@@ -315,7 +315,7 @@ def admin_login():
         username = request.form['username']
         password = request.form['password']
         
-        if username == 'admin' and password == 'kimjinsung':
+        if username == 'admin' and password == 'admin1234':
             return redirect(url_for('admin_dashboard', lang=lang))
         else:
             flash(translations['wrong_id'])

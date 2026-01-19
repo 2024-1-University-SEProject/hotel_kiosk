@@ -1,28 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ translations.facility_info }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1 class="title">{{ translations.facility_info }}</h1>
-        {% include 'users/_lang_select.html' %}
-        <p>{{ translations.built_by }}</p>
-        <h2>{{ translations.wifi_info }}</h2>
-        <p>{{ translations.wifi_name }}: HotelWiFi</p>
-        <p>{{ translations.wifi_password }}: password123</p>
-        <h2>{{ translations.room_info }}</h2>
-        <p>{{ translations.floor_info }}: 5 floors</p>
-        <h2>{{ translations.hotel_facilities }}</h2>
-        <p>1F: Lobby, Restaurant</p>
-        <p>2F: Gym, Pool</p>
-        <p>3F: Conference Rooms</p>
-        <h2>{{ translations.nearby_facilities }}</h2>
-        <p>Famous Tourist Spot: Jinsung Park</p>
-        <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+{% extends "base.html" %}
+{% block title %}{{ translations.facility_info }}{% endblock %}
+
+{% block content %}
+<h1 class="title">{{ translations.facility_info }}</h1>
+{% include 'users/_lang_select.html' %}
+
+<!-- Section 1: Facilities -->
+<div class="content-section">
+    <div class="section-title">{{ translations.hotel_facilities }}</div>
+    <div class="scrolling-wrapper">
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-concierge-bell"></i></div>
+            <div class="card-text">Lobby<br>1F</div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-utensils"></i></div>
+            <div class="card-text">Restaurant<br>1F</div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-dumbbell"></i></div>
+            <div class="card-text">Gym<br>2F</div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-swimming-pool"></i></div>
+            <div class="card-text">Pool<br>2F</div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-handshake"></i></div>
+            <div class="card-text">Conference<br>3F</div>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<!-- Section 2: Room Info -->
+<div class="content-section">
+    <div class="section-title">{{ translations.room_info }}</div>
+    <div class="scrolling-wrapper">
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-wifi"></i></div>
+            <div class="card-text">WiFi<br><span class="card-subtext">{{ translations.wifi_password }}</span></div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-building"></i></div>
+            <div class="card-text">Floors<br><span class="card-subtext">Total 5</span></div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="card-text">Info<br><span class="card-subtext">Check-in 15:00</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 3: Nearby -->
+<div class="content-section">
+    <div class="section-title">{{ translations.nearby_facilities }}</div>
+    <div class="scrolling-wrapper">
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-tree"></i></div>
+            <div class="card-text">Park<br><span class="card-subtext">500m</span></div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-coffee"></i></div>
+            <div class="card-text">Cafe<br><span class="card-subtext">200m</span></div>
+        </div>
+        <div class="card-modern">
+            <div class="card-icon"><i class="fas fa-store"></i></div>
+            <div class="card-text">Mart<br><span class="card-subtext">1km</span></div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 40px; text-align: center;">
+    <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">
+        {{ translations.built_by }}
+    </p>
+    <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>
+</div>
+
+{% endblock %}
