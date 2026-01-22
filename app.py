@@ -554,7 +554,14 @@ def checkin():
         reservations[reservation_number] = name
         a_rec_reservations[reservation_number] = name
         session['guest'] = guests[-1]
-        return redirect(url_for('checkin_confirm', lang=lang))
+        
+        # --- JWT Issue for Guest ---
+        guest_info = {'name': name, 'phone': phone, 'room': room, 'reservation_number': reservation_number, 'role': 'guest'}
+        token = create_jwt(guest_info)
+        
+        response = make_response(redirect(url_for('checkin_confirm', lang=lang)))
+        response.set_cookie('guest_token', token, httponly=True)
+        return response
     return render_template('users/checkin.html', translations=translations, languages=languages, room_prices=room_prices, breakfast_price=breakfast_price, room_priceses=room_priceses, current_lang=lang)
 
 @app.route('/select_room', methods=['GET', 'POST'])
@@ -592,6 +599,13 @@ def checkin_confirm():
 def checkout():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
+    
+    # --- JWT Verification for Guest ---
+    guest_from_token = None
+    token = request.cookies.get('guest_token')
+    if token:
+        guest_from_token = decode_jwt(token)
+
     if request.method == 'POST':
         name = request.form['name']
         reservation_number = int(request.form['reservation_number'])
@@ -602,7 +616,7 @@ def checkout():
                 session['guest'] = guest
                 return redirect(url_for('checkout_confirm', lang=lang))
         flash(translations['invalid_name_or_room'])
-    return render_template('users/checkout.html', translations=translations, languages=languages, current_lang=lang)
+    return render_template('users/checkout.html', translations=translations, languages=languages, current_lang=lang, guest_from_token=guest_from_token)
 
 @app.route('/checkout_confirm', methods=['GET', 'POST'])
 def checkout_confirm():
@@ -613,7 +627,10 @@ def checkout_confirm():
         guests.remove(guest)
         del reservations[guest['reservation_number']]
         flash(translations['checkout_complete'])
-        return redirect(url_for('index', lang=lang))
+        
+        response = make_response(redirect(url_for('index', lang=lang)))
+        response.set_cookie('guest_token', '', expires=0) # Logout guest
+        return response
     return render_template('users/checkout_confirm.html', translations=translations, languages=languages, guest=guest, current_lang=lang)
 
 def calculate_price(room, breakfast):
