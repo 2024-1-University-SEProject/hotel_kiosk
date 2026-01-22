@@ -3,25 +3,31 @@
 {% block content %}
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{ { translations['adjust_price'] }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
+
 <body>
     <div class="container">
         <h1 class="title">{{ translations['adjust_price'] }}</h1>
         <div class="button-grid">
-            <a href="{{ url_for('admin_price', lang=current_lang) }}" class="kiosk-button"> {{ translations['admin_rates'] }}</a>
-            <a href="{{ url_for('adjust_weekend_price', lang=current_lang) }}" class="kiosk-button">{{ translations['weekend_price_setting'] }}</a>
-            <br/>
-            <a href="{{ url_for('adjust_breakfast_price', lang=current_lang) }}" class="kiosk-button">{{ translations['b_p_setting'] }}</a>
-            <a href="{{ url_for('adjust_back_to_first_price', lang=current_lang) }}" class="kiosk-button">{{ translations['b_t_f_price'] }}</a>
-            <br/><br/><br/><br/><br/><br/>
+            <a href="{{ url_for('admin_price', lang=current_lang) }}" class="kiosk-button"> {{
+                translations['admin_rates'] }}</a>
+            <a href="{{ url_for('adjust_weekend_price', lang=current_lang) }}" class="kiosk-button">{{
+                translations['weekend_price_setting'] }}</a>
+            <a href="{{ url_for('adjust_breakfast_price', lang=current_lang) }}" class="kiosk-button">{{
+                translations['b_p_setting'] }}</a>
+            <a href="{{ url_for('adjust_back_to_first_price', lang=current_lang) }}" class="kiosk-button">{{
+                translations['b_t_f_price'] }}</a>
         </div>
-        <a href="{{ url_for('admin_dashboard', lang=current_lang) }}" class="kiosk-button">{{ translations['back'] }}</a>
+        <a href="{{ url_for('admin_dashboard', lang=current_lang) }}" class="kiosk-button">{{ translations['back']
+            }}</a>
     </div>
 </body>
+
 </html>
 {% endblock %}

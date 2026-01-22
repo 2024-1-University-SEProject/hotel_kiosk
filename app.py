@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response
 from datetime import datetime, timedelta
+import jwt
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+JWT_SECRET_KEY = 'hotel_kiosk_secure_key' # For JWT tokens
 
 # Sample data for check-in/check-out process
 guests = []
@@ -300,6 +303,38 @@ def get_translations(lang):
     }
     return translations.get(lang, translations[default_lang])
 
+# --- JWT Utility Functions ---
+def create_jwt(user_info):
+    payload = {
+        'user_info': user_info,
+        'exp': datetime.utcnow() + timedelta(hours=2)
+    }
+    token = jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')
+    return token
+
+def decode_jwt(token):
+    try:
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
+        return payload['user_info']
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.cookies.get('admin_token')
+        if not token:
+            return redirect(url_for('admin_login', lang=request.args.get('lang', default_lang)))
+        
+        user_info = decode_jwt(token)
+        if not user_info or user_info.get('role') != 'admin':
+            return redirect(url_for('admin_login', lang=request.args.get('lang', default_lang)))
+        
+        return f(*args, **kwargs)
+    return decorated
+
 @app.route('/')
 def index():
     lang = request.args.get('lang', default_lang)
@@ -316,19 +351,26 @@ def admin_login():
         password = request.form['password']
         
         if username == 'admin' and password == 'admin1234':
-            return redirect(url_for('admin_dashboard', lang=lang))
+            user_info = {'username': 'admin', 'role': 'admin'}
+            token = create_jwt(user_info)
+            
+            response = make_response(redirect(url_for('admin_dashboard', lang=lang)))
+            response.set_cookie('admin_token', token, httponly=True)
+            return response
         else:
             flash(translations['wrong_id'])
     
     return render_template('admin/login.html', translations=translations, languages=languages, current_lang=lang)
 
 @app.route('/admin/dashboard')
+@token_required
 def admin_dashboard():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
     return render_template('admin/dashboard.html', translations=translations, languages=languages, current_lang=lang)
 
 @app.route('/admin/price', methods=['GET', 'POST'])
+@token_required
 def admin_price():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -345,12 +387,14 @@ def admin_price():
     return render_template('admin/price.html', translations=translations, languages=languages, current_lang=lang, room_prices=room_prices)
 
 @app.route('/admin/adjust_price')
+@token_required
 def adjust_price():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
     return render_template('admin/adjust_price.html', translations=translations, current_lang=lang)
 
 @app.route('/admin/adjust_price/weekend', methods=['GET', 'POST'])
+@token_required
 def adjust_weekend_price():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -362,6 +406,7 @@ def adjust_weekend_price():
     return render_template('admin/weekend_price.html', translations=translations, current_lang=lang)
 
 @app.route('/admin/adjust_price/back_to_first_price', methods=['GET', 'POST'])
+@token_required
 def adjust_back_to_first_price():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -372,6 +417,7 @@ def adjust_back_to_first_price():
     return render_template('admin/back_to_first_price.html', translations=translations, current_lang=lang)
 
 @app.route('/admin/dirty_rooms')
+@token_required
 def dirty_rooms():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -379,6 +425,7 @@ def dirty_rooms():
     return render_template('admin/dirty_rooms.html', translations=translations, current_lang=lang, dirty_rooms=dirty_rooms)
 
 @app.route('/admin/clean_room', methods=['POST'])
+@token_required
 def clean_room():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -389,12 +436,14 @@ def clean_room():
     return redirect(url_for('dirty_rooms', lang=lang))
 
 @app.route('/admin/receipts')
+@token_required
 def admin_receipts():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
     return render_template('admin/receipts.html', translations=translations, reservations=reservations, current_lang=lang, guests=guests)
 
 @app.route('/admin/receipts/<int:reservation_number>')
+@token_required
 def receipt_details(reservation_number):
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -407,12 +456,14 @@ def receipt_details(reservation_number):
 
 
 @app.route('/admin/restore')
+@token_required
 def admin_restore():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
     return render_template('admin/restore.html', translations=translations, reservations=reservations, a_rec_reservations=a_rec_reservations, current_lang=lang, guests=guests)
 
 @app.route('/admin/restore/<int:reservation_number>')
+@token_required
 def restore_details(reservation_number):
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -424,6 +475,7 @@ def restore_details(reservation_number):
     return render_template('admin/restore_details.html', translations=translations, current_lang=lang, a_receipt=a_receipt)
 
 @app.route('/admin/adjust_price/breakfast', methods=['GET', 'POST'])
+@token_required
 def adjust_breakfast_price():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
@@ -435,10 +487,18 @@ def adjust_breakfast_price():
     return render_template('admin/breakfast_price.html', translations=translations, current_lang=lang)
 
 @app.route('/admin/feedback')
+@token_required
 def feedback():
     lang = request.args.get('lang', default_lang)
     translations = get_translations(lang)
     return render_template('admin/feedback.html', call_records=call_records, translations=translations, current_lang=lang)
+
+@app.route('/admin/logout')
+def admin_logout():
+    lang = request.args.get('lang', default_lang)
+    response = make_response(redirect(url_for('admin_login', lang=lang)))
+    response.set_cookie('admin_token', '', expires=0)
+    return response
 
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////////////

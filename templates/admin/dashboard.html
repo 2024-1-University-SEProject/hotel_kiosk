@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ translations['admin_dashboard'] }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
+
 <body>
     <div class="container">
         <h1 class="title">{{ translations['admin_dashboard'] }}</h1>
         {% include 'users/_lang_select.html' %}
         <div class="button-grid">
-            <a href="{{ url_for('adjust_price', lang=current_lang) }}" class="kiosk-button">{{ translations['adjust_price'] }}</a>
-            <a href="{{ url_for('dirty_rooms', lang=current_lang) }}" class="kiosk-button">{{ translations.admin_dirty_list }}</a>
-            <br/>
-            <a href="{{ url_for('admin_receipts', lang=current_lang) }}" class="kiosk-button">{{ translations.admin_receipts }}</a>
-            <a href="{{ url_for('admin_restore', lang=current_lang) }}" class="kiosk-button">{{ translations.admin_restore }}</a>
-            <br/>
-            <a href="{{ url_for('feedback', lang=current_lang) }}" class="kiosk-button">{{ translations.call_staff }}</a>
-            <br/><br/><br/><br/><br/><br/>
+            <a href="{{ url_for('adjust_price', lang=current_lang) }}" class="kiosk-button">{{
+                translations['adjust_price'] }}</a>
+            <a href="{{ url_for('dirty_rooms', lang=current_lang) }}" class="kiosk-button">{{
+                translations.admin_dirty_list }}</a>
+            <a href="{{ url_for('admin_receipts', lang=current_lang) }}" class="kiosk-button">{{
+                translations.admin_receipts }}</a>
+            <a href="{{ url_for('admin_restore', lang=current_lang) }}" class="kiosk-button">{{
+                translations.admin_restore }}</a>
+            <a href="{{ url_for('feedback', lang=current_lang) }}" class="kiosk-button">{{ translations.call_staff
+                }}</a>
+            <a href="{{ url_for('admin_logout', lang=current_lang) }}" class="kiosk-button"
+                style="background-color: #d9534f;">Logout</a>
         </div>
         <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations['back'] }}</a>
     </div>
 </body>
+
 </html>
