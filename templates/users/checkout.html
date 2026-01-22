@@ -4,42 +4,134 @@
 <div class="container">
     <h1 class="title">{{ translations.checkout }}</h1>
     {% include 'users/_lang_select.html' %}
-    {% if guest_from_token %}
-    <div id="quick-checkout-card" class="content-section" style="text-align: center;">
-        <h2>{{ guest_from_token.name }}님, 퇴실하시겠습니까?</h2>
-        <p>{{ translations.room_number }}: {{ guest_from_token.room }}</p>
+    <!-- 1. Guest List (Grid View) -->
+    <div id="guest-list" class="panel-container"
+        style="margin-bottom: 30px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+        {% if guests %}
+        {% for guest in guests %}
+        <div class="panel"
+            onclick="selectGuest('{{ guest.name }}', '{{ guest.reservation_number }}', '{{ guest.room }}')"
+            style="cursor: pointer; padding: 20px; text-align: left; border: 1px solid #eee; display: flex; flex-direction: column; justify-content: center; min-height: 120px;">
+            <div style="font-size: 1.4rem; font-weight: bold; color: #333; margin-bottom: 5px;">{{ guest.room }}호</div>
+            <div style="font-size: 1.1rem; color: #666;">{{ guest.name }}</div>
+            {% if guest_from_token and guest.reservation_number == guest_from_token.reservation_number %}
+            <div
+                style="margin-top: 10px; font-size: 0.8rem; color: #28a745; font-weight: bold; padding: 4px 8px; background: #e6fffa; border-radius: 4px; display: inline-block;">
+                ✓ 내 예약 (인증됨)</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p
+            style="text-align: center; width: 100%; color: #999; padding: 40px; background: #f9f9f9; border-radius: 10px;">
+            현재 체크인된 고객이 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <!-- 2. Confirmation Section (Hidden by default) -->
+    <div id="confirmation-section" class="content-section"
+        style="display: none; text-align: center; background-color: #f9f9f9; border: 2px solid #333;">
+        <h2 id="confirm-name" style="margin-bottom: 20px;"></h2>
+        <p style="margin-bottom: 30px;">정보가 일치하면 아래 버튼을 눌러 체크아웃을 완료해주세요.</p>
+
         <form method="POST">
-            <input type="hidden" name="name" value="{{ guest_from_token.name }}">
-            <input type="hidden" name="reservation_number" value="{{ guest_from_token.reservation_number }}">
-            <button type="submit" class="kiosk-button" style="width: 100%; margin-top: 20px;">{{
-                translations.checkout_confirm }}</button>
+            <input type="hidden" id="selected-name" name="name" value="">
+            <input type="hidden" id="selected-res-num" name="reservation_number" value="">
+            <button type="submit" class="kiosk-button" style="width: 100%; background-color: #333;">네, 체크아웃 합니다</button>
         </form>
+        <button type="button" onclick="cancelConfirmation()" class="kiosk-button"
+            style="width: 100%; background-color: #999; margin-top: 10px;">아니오, 돌아가기</button>
+    </div>
+
+    <!-- 3. Manual Entry Toggle -->
+    <div id="manual-toggle" style="text-align: center; margin-top: 20px;">
         <button type="button" onclick="showManualCheckout()" class="kiosk-button"
-            style="background-color: transparent; color: #666; border: 1px solid #ccc; margin-top: 10px; width: auto; min-width: auto; padding: 10px 20px; font-size: 0.9rem;">
+            style="background-color: transparent; color: #666; border: 1px solid #ccc; width: auto; min-width: auto; padding: 10px 20px; font-size: 0.9rem;">
             직접 입력하여 퇴실하기
         </button>
     </div>
-    {% endif %}
 
+    <script
+        data-user-token-res-num="{% if guest_from_token %}{{ guest_from_token.reservation_number | default(0) }}{% else %}null{% endif %}">
+            // Get user token reservation number from data attribute
+            var scriptTag = document.currentScript;
+            var userTokenResNum = scriptTag.getAttribute('data-user-token-res-num');
+            if (userTokenResNum === 'null') {
+                userTokenResNum = null;
+            } else if (userTokenResNum !== null) {
+                userTokenResNum = parseInt(userTokenResNum);
+            }
+
+            function selectGuest(name, resNum, room) {
+                // Check if the user is authorized for this reservation
+                if (userTokenResNum && userTokenResNum != resNum) {
+                    alert("본인의 예약만 체크아웃할 수 있습니다.");
+                    return;
+                }
+
+                // Valid selection
+                document.getElementById('confirm-name').innerText = name + "님, 퇴실하시겠습니까?";
+
+                document.getElementById('selected-name').value = name;
+                document.getElementById('selected-res-num').value = resNum;
+
+                document.getElementById('guest-list').style.display = 'none';
+                document.getElementById('manual-toggle').style.display = 'none';
+                document.getElementById('confirmation-section').style.display = 'block';
+            }
+
+            function cancelConfirmation() {
+                document.getElementById('confirmation-section').style.display = 'none';
+                document.getElementById('guest-list').style.display = 'grid'; // Restore grid
+                document.getElementById('manual-toggle').style.display = 'block';
+            }
+        </script>
+
+    <!-- Manual Checkout Form -->
     <div id="manual-checkout-form" {% if guest_from_token %}style="display:none;" {% endif %}>
         <form method="POST">
             <div class="form-group">
                 <label for="name">{{ translations.name }}</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" required placeholder="예약자 성함을 입력하세요">
             </div>
             <div class="form-group">
                 <label for="reservation_number">{{ translations.reservation_number }}</label>
-                <input type="number" id="reservation_number" name="reservation_number" required>
+                <input type="number" id="reservation_number" name="reservation_number" required
+                    placeholder="예약 번호를 입력하세요">
             </div>
             <button type="submit" class="kiosk-button">{{ translations.confirm }}</button>
         </form>
+        {% if guest_from_token %}
+        <button type="button" onclick="hideManualCheckout()" class="kiosk-button"
+            style="background-color: transparent; color: #666; width: 100%; margin-top: 10px;">취소</button>
+        {% endif %}
     </div>
 
     <script>
+        function showConfirmation() {
+            document.getElementById('reservation-card').style.display = 'none';
+            document.getElementById('manual-toggle').style.display = 'none';
+            document.getElementById('confirmation-section').style.display = 'block';
+        }
+
+        function cancelConfirmation() {
+            document.getElementById('confirmation-section').style.display = 'none';
+            document.getElementById('reservation-card').style.display = 'block';
+            document.getElementById('manual-toggle').style.display = 'block';
+        }
+
         function showManualCheckout() {
-            var quickCard = document.getElementById('quick-checkout-card');
-            if (quickCard) quickCard.style.display = 'none';
+            var card = document.getElementById('reservation-card');
+            if (card) card.style.display = 'none';
+            var toggle = document.getElementById('manual-toggle');
+            if (toggle) toggle.style.display = 'none';
             document.getElementById('manual-checkout-form').style.display = 'block';
+        }
+
+        function hideManualCheckout() {
+            document.getElementById('manual-checkout-form').style.display = 'none';
+            document.getElementById('reservation-card').style.display = 'block';
+            document.getElementById('manual-toggle').style.display = 'block';
         }
     </script>
     <a href="{{ url_for('index', lang=current_lang) }}" class="kiosk-button">{{ translations.back }}</a>

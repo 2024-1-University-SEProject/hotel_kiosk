@@ -338,8 +338,63 @@ def token_required(f):
 @app.route('/')
 def index():
     lang = request.args.get('lang', default_lang)
+    
+    # Check if user is already logged in
+    token = request.cookies.get('guest_token')
+    if token:
+        guest_info = decode_jwt(token)
+        if guest_info:
+            return redirect(url_for('menu', lang=lang))
+            
     translations = get_translations(lang)
     return render_template('users/index.html', translations=translations, languages=languages, current_lang=lang)
+
+@app.route('/login', methods=['POST'])
+def login():
+    lang = request.args.get('lang', default_lang)
+    name = request.form['name']
+    phone = request.form['phone']
+    
+    # Generate token for this user
+    # Check if they are an existing guest
+    existing_guest = next((g for g in guests if g['name'] == name and g['phone'] == phone), None)
+    
+    if existing_guest:
+        # Use existing reservation info
+        user_info = existing_guest
+        user_info['role'] = 'guest'
+    else:
+        # New user
+        user_info = {'name': name, 'phone': phone, 'role': 'guest'}
+    
+    token = create_jwt(user_info)
+    
+    response = make_response(redirect(url_for('menu', lang=lang)))
+    response.set_cookie('guest_token', token, httponly=True)
+    return response
+
+@app.route('/menu')
+def menu():
+    lang = request.args.get('lang', default_lang)
+    token = request.cookies.get('guest_token')
+    guest = None
+    
+    # Simple token validation
+    if token:
+        guest = decode_jwt(token)
+        
+    if not guest:
+        return redirect(url_for('index', lang=lang))
+        
+    translations = get_translations(lang)
+    return render_template('users/menu.html', translations=translations, languages=languages, current_lang=lang, guest=guest)
+
+@app.route('/logout')
+def logout():
+    lang = request.args.get('lang', default_lang)
+    response = make_response(redirect(url_for('index', lang=lang)))
+    response.set_cookie('guest_token', '', expires=0)
+    return response
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
@@ -530,6 +585,13 @@ def checkin():
     translations = get_translations(lang)
     global roomnum
     room_priceses = roomnum
+    
+    # Get guest info from token to pre-fill form
+    token = request.cookies.get('guest_token')
+    guest_info = None
+    if token:
+        guest_info = decode_jwt(token)
+
     if request.method == 'POST':
         global reservation_counter
         name = request.form['name']
@@ -556,13 +618,14 @@ def checkin():
         session['guest'] = guests[-1]
         
         # --- JWT Issue for Guest ---
+        # Update token with everything including room and reservation number
         guest_info = {'name': name, 'phone': phone, 'room': room, 'reservation_number': reservation_number, 'role': 'guest'}
         token = create_jwt(guest_info)
         
         response = make_response(redirect(url_for('checkin_confirm', lang=lang)))
         response.set_cookie('guest_token', token, httponly=True)
         return response
-    return render_template('users/checkin.html', translations=translations, languages=languages, room_prices=room_prices, breakfast_price=breakfast_price, room_priceses=room_priceses, current_lang=lang)
+    return render_template('users/checkin.html', translations=translations, languages=languages, room_prices=room_prices, breakfast_price=breakfast_price, room_priceses=room_priceses, current_lang=lang, guest_info=guest_info)
 
 @app.route('/select_room', methods=['GET', 'POST'])
 def select_room():
@@ -616,7 +679,7 @@ def checkout():
                 session['guest'] = guest
                 return redirect(url_for('checkout_confirm', lang=lang))
         flash(translations['invalid_name_or_room'])
-    return render_template('users/checkout.html', translations=translations, languages=languages, current_lang=lang, guest_from_token=guest_from_token)
+    return render_template('users/checkout.html', translations=translations, languages=languages, current_lang=lang, guest_from_token=guest_from_token, guests=guests)
 
 @app.route('/checkout_confirm', methods=['GET', 'POST'])
 def checkout_confirm():
@@ -640,4 +703,4 @@ def calculate_price(room, breakfast):
     return price
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
