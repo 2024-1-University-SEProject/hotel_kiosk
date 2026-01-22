@@ -38,11 +38,13 @@
 
         <div class="form-group">
             <label for="name">{{ translations.name }}:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" required {% if guest_info %}value="{{ guest_info.name }}" readonly
+                style="background-color: #f0f0f0;" {% endif %}>
         </div>
         <div class="form-group">
             <label for="phone">{{ translations.phone }}:</label>
-            <input type="text" id="phone" name="phone" required pattern="\d*">
+            <input type="text" id="phone" name="phone" required pattern="\d*" {% if guest_info
+                %}value="{{ guest_info.phone }}" readonly style="background-color: #f0f0f0;" {% endif %}>
         </div>
         <div class="form-group">
             <label for="breakfast">{{ translations.breakfast }}:</label>

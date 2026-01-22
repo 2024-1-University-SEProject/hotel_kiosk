@@ -15,18 +15,31 @@
     <div class="container">
         <h1 class="title">{{ translations.hotel_title }}</h1>
         {% include 'users/_lang_select.html' %}
-        <div class="button-grid">
-            <a href="{{ url_for('select_room', lang=current_lang) }}" class="kiosk-button">{{ translations.checkin
-                }}</a>
-            <a href="{{ url_for('checkout', lang=current_lang) }}" class="kiosk-button">{{ translations.checkout }}</a>
-            <a href="{{ url_for('facilities', lang=current_lang) }}" class="kiosk-button">{{ translations.facilities
-                }}</a>
-            <a href="{{ url_for('call_staff', lang=current_lang) }}" class="kiosk-button">{{ translations.call_staff
-                }}</a>
+
+        <div class="login-container"
+            style="max-width: 400px; margin: 0 auto; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #333;">Welcome</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #666;">서비스를 이용하시려면 정보를 입력해주세요.</p>
+
+            <form method="POST" action="{{ url_for('login', lang=current_lang) }}">
+                <div class="form-group">
+                    <label for="name">{{ translations.name }}</label>
+                    <input type="text" id="name" name="name" required placeholder="이름을 입력하세요"
+                        style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                <div class="form-group">
+                    <label for="phone">{{ translations.phone }}</label>
+                    <input type="tel" id="phone" name="phone" required pattern="[0-9]*" placeholder="전화번호를 입력하세요 (- 없이)"
+                        style="width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+                <button type="submit" class="kiosk-button" style="width: 100%; margin: 0;">시작하기</button>
+            </form>
         </div>
+
         <div class="admin-login">
-            <br /><br /><br /><br /><br /><br />
-            <a href="{{ url_for('admin_login', lang=current_lang) }}" class="kiosk-button">{{ translations.admin }}</a>
+            <br /><br />
+            <a href="{{ url_for('admin_login', lang=current_lang) }}"
+                style="color: #999; text-decoration: none; font-size: 0.9rem;">{{ translations.admin }}</a>
         </div>
     </div>
 </body>
